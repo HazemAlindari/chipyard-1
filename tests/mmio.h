@@ -51,7 +51,7 @@ static inline uint64_t reg_read64(unsigned long addr)
 	return *ptr;
 }
 
-static inline void reg_write512(unsigned long addr, uint512_t data)
+/* static inline void reg_write512(unsigned long addr, uint512_t data)
 {
 	volatile uint64_t *ptr = (volatile uint512_t *) addr;
 	*ptr = data;
@@ -61,6 +61,6 @@ static inline uint64_t reg_read512(unsigned long addr)
 {
 	volatile uint64_t *ptr = (volatile uint512_t *) addr;
 	return *ptr;
-}
+} */
 
 #endif
