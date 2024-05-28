@@ -151,3 +151,7 @@
 [submodule "tools/circt"]
 	path = tools/circt
 	url = https://github.com/llvm/circt.git
+[submodule "generators/fpga"]
+	path = generators/fpga
+	url = git@github.com:HazemAlindari/fpga.git
+    branch = sha3

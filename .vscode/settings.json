@@ -1,0 +1,72 @@
+{
+    "files.exclude": {
+        "**/._*": true,
+        "**/.*": true
+    },
+    "terminal.integrated.profiles.osx": {
+
+        "bash": {
+            "path": "bash",
+            "args": [
+                "-l"
+            ],
+            "icon": "terminal-bash"
+        },
+        "zsh": {
+            "path": "zsh",
+            "args": [
+                "-l",
+               "-c", "chipyard"
+            ]
+        },
+        "fish": {
+            "path": "fish",
+            "args": [
+                "-l"
+            ]
+        },
+        "tmux": {
+            "path": "tmux",
+            "icon": "terminal-tmux"
+        },
+        "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell"
+        }
+    },
+    "favorites.resources": [
+        {
+            "filePath": "generators/chipyard/src/main/scala",
+            "group": "Default"
+        },
+        {
+            "filePath": "sims/verilator",
+            "group": "Default"
+        },
+        {
+            "filePath": "tests",
+            "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/src/main/scala/FPGA.scala",
+            "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/src/main/resources/vsrc",
+            "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/c_files",
+            "group": "Default"
+        }
+    ],
+    "files.associations": {
+        "*.sbt": "chisel",
+        "mmio.h": "c",
+        "atomic": "c",
+        "cstdint": "c",
+        "mutex": "c",
+        "typeinfo": "c"
+    },
+    "terminal.integrated.defaultProfile.osx": "zsh"
+}
