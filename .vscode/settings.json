@@ -63,6 +63,10 @@
     "files.associations": {
         "*.sbt": "scala",
         "*.ys": "tcl",
+        "stdio.h": "c"
     },
-    "terminal.integrated.defaultProfile.osx": "zsh"
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/.conda-env/riscv-tools/riscv64-unknown-elf/include/"
+    ]
 }
