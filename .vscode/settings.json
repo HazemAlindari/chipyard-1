@@ -61,12 +61,8 @@
         }
     ],
     "files.associations": {
-        "*.sbt": "chisel",
-        "mmio.h": "c",
-        "atomic": "c",
-        "cstdint": "c",
-        "mutex": "c",
-        "typeinfo": "c"
+        "*.sbt": "scala",
+        "*.ys": "tcl",
     },
     "terminal.integrated.defaultProfile.osx": "zsh"
 }
