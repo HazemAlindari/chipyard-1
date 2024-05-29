@@ -7,13 +7,16 @@
 #define FPGA_STATUS 0x5000
 #define FPGA_RST 0x5002
 #define FPGA_INPUT0ATTR_IN 0x5004
-#define FPGA_INPUT1ATTR_IN 0x5006
-#define FPGA_INPUT0ATTR_OUT 0x5008
-#define FPGA_INPUT1ATTR_OUT 0x500A
+#define FPGA_INPUT0ATTR_OUT 0x5006
 #define FPGA_INPUT0 0x5010
-#define FPGA_INPUT1 0x5018
 #define FPGA_OUTPUT0 0x5020
 #define FPGA_OUTPUT1 0x5028
+#define FPGA_OUTPUT2 0x5030
+#define FPGA_OUTPUT3 0x5038
+#define FPGA_OUTPUT4 0x5040
+#define FPGA_OUTPUT5 0x5048
+#define FPGA_OUTPUT6 0x5050
+#define FPGA_OUTPUT7 0x5058
 #define bitsToBePrintedAtLeastConstant 16
 #define FPGA_BUFFER_SIZE 256
 #define DEBUG 0
@@ -98,24 +101,81 @@ void wait_for_output_ready_FPGA() {
 void write_input0_FPGA(uint64_t* data, int size) {
   _buffer_write_FPGA(FPGA_INPUT0, FPGA_INPUT0ATTR_IN, FPGA_INPUT0ATTR_OUT, data, size);
 }
-void write_input1_FPGA(uint64_t* data, int size) {
-  _buffer_write_FPGA(FPGA_INPUT1, FPGA_INPUT1ATTR_IN, FPGA_INPUT1ATTR_OUT, data, size);
-}
-void print_output0_FPGA(uint64_t* data, int size) {
-  for (int i = 0; i < size; i++) {
-    data[i] = reg_read64(FPGA_OUTPUT0);
-    printf("Reading %ld from buffer[%d]\n", data[i], i);
-  }
-}
 uint64_t read_output0_FPGA() {
   return reg_read64(FPGA_OUTPUT0);
 }
 uint64_t read_output1_FPGA() {
   return reg_read64(FPGA_OUTPUT1);
 }
+uint64_t read_output2_FPGA() {
+  return reg_read64(FPGA_OUTPUT2);
+}
+uint64_t read_output3_FPGA() {
+  return reg_read64(FPGA_OUTPUT3);
+}
+uint64_t read_output4_FPGA() {
+  return reg_read64(FPGA_OUTPUT4);
+}
+uint64_t read_output5_FPGA() {
+  return reg_read64(FPGA_OUTPUT5);
+}
+uint64_t read_output6_FPGA() {
+  return reg_read64(FPGA_OUTPUT6);
+}
+uint64_t read_output7_FPGA() {
+  return reg_read64(FPGA_OUTPUT7);
+}
+uint512_t read_outputs_FPGA() {
+    uint512_t outputs;
+    memset (&outputs, 0, sizeof(outputs));
+    outputs.val0 = read_output0_FPGA();
+    outputs.val1 = read_output1_FPGA();
+    outputs.val2 = read_output2_FPGA();
+    outputs.val3 = read_output3_FPGA();
+    outputs.val4 = read_output4_FPGA();
+    outputs.val5 = read_output5_FPGA();
+    outputs.val6 = read_output6_FPGA();
+    outputs.val7 = read_output7_FPGA();
+    return outputs;
+}
+void print_output0_FPGA() {
+  printf("Output0 = %ld\n", read_output0_FPGA());
+}
+void print_output1_FPGA() {
+  printf("Output1 = %ld\n", read_output1_FPGA());
+}
+void print_output2_FPGA() {
+  printf("Output2 = %ld\n", read_output2_FPGA());
+}
+void print_output3_FPGA() {
+  printf("Output3 = %ld\n", read_output3_FPGA());
+}
+void print_output4_FPGA() {
+  printf("Output4 = %ld\n", read_output4_FPGA());
+}
+void print_output5_FPGA() {
+  printf("Output5 = %ld\n", read_output5_FPGA());
+}
+void print_output6_FPGA() {
+  printf("Output6 = %ld\n", read_output6_FPGA());
+}
+void print_output7_FPGA() {
+  printf("Output7 = %ld\n", read_output7_FPGA());
+}
+void print_outputs_FPGA() {
+    printf("Output = ");
+    printf("%ld ", read_output0_FPGA());
+    printf("%ld ", read_output1_FPGA());
+    printf("%ld ", read_output2_FPGA());
+    printf("%ld ", read_output3_FPGA());
+    printf("%ld ", read_output4_FPGA());
+    printf("%ld ", read_output5_FPGA());
+    printf("%ld ", read_output6_FPGA());
+    printf("%ld\n", read_output7_FPGA());
+}
 void wait_for_inputs_receive_ready_FPGA() {
   //if input0,1 and idle state => fpga is ready and loop exits
-  while ((reg_read16(FPGA_STATUS) & 0b0010000000000011) == 0) {
+  while ((reg_read16(FPGA_STATUS) & 0b0010000000000001) == 0) {
     printf("waiting for peripheral to be ready\n");
     if (DEBUG) printf("FPGA_STATUS = 0b");
     if (DEBUG) print_binary(reg_read16(FPGA_STATUS),bitsToBePrintedAtLeastConstant);
