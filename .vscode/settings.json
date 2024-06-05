@@ -34,6 +34,14 @@
             "icon": "terminal-powershell"
         }
     },
+    "highlight.regexes": {
+        "(.*)(FPGASettings.DEBUG)(.*)": [ // A regex will be created from this string, don't forget to double escape it
+        { "color": "#5e6559" }, // Decoration options to apply to the first capturing group, in this case "//TODO"
+        { "color": "#5e6559" }, // Decoration options to apply to the first capturing group, in this case "//TODO"
+        { "color": "#5e6559" } // Decoration options to apply to the second capturing group, in this case ":"
+        ]
+
+    },
     "favorites.resources": [
         {
             "filePath": "generators/chipyard/src/main/scala",
@@ -66,8 +74,9 @@
     },
     "terminal.integrated.defaultProfile.osx": "zsh",
     "C_Cpp.default.includePath": [
-        "${workspaceFolder}/.conda-env/riscv-tools/riscv64-unknown-elf/include/",
+        //"${workspaceFolder}/.conda-env/riscv-tools/riscv64-unknown-elf/include/",
         "${workspaceFolder}/tests"
     ],
-    "C_Cpp.autoAddFileAssociations": false
+    "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.errorSquiggles": "disabled"
 }
