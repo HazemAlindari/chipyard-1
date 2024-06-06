@@ -9,17 +9,17 @@
 #define FPGA_INPUT0ATTR_IN 0x5004
 #define FPGA_INPUT0ATTR_OUT 0x5006
 #define FPGA_INPUT0 0x5010
-#define FPGA_OUTPUT0 0x5020
-#define FPGA_OUTPUT1 0x5028
-#define FPGA_OUTPUT2 0x5030
-#define FPGA_OUTPUT3 0x5038
-#define FPGA_OUTPUT4 0x5040
-#define FPGA_OUTPUT5 0x5048
-#define FPGA_OUTPUT6 0x5050
-#define FPGA_OUTPUT7 0x5058
+#define FPGA_OUTPUT0 0x5018
+#define FPGA_OUTPUT1 0x5020
+#define FPGA_OUTPUT2 0x5028
+#define FPGA_OUTPUT3 0x5030
+#define FPGA_OUTPUT4 0x5038
+#define FPGA_OUTPUT5 0x5040
+#define FPGA_OUTPUT6 0x5048
+#define FPGA_OUTPUT7 0x5050
 #define bitsToBePrintedAtLeastConstant 16
 #define FPGA_BUFFER_SIZE 256
-#define DEBUG 0
+#define DEBUG 1
 
 void print_binary(int num, int bitsToBePrintedAtLeast) {
     int bitsToBePrinted = bitsToBePrintedAtLeast;
@@ -87,8 +87,8 @@ void _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress,
     if (DEBUG) printf("\n\n");
 }
 void wait_for_output_ready_FPGA() {
-    //if output0,1 are ready => fpga completed calculations and loop exits
-    while ((reg_read16(FPGA_STATUS) & 0b1100000000000000)    == 0) {
+    //if output0 is ready => fpga completed calculations and loop exits
+    while ((reg_read16(FPGA_STATUS) & 0b0100000000000000)    == 0) {
         printf("waiting for peripheral to complete\n");
         if (DEBUG) printf("FPGA_STATUS = 0b");
         if (DEBUG) print_binary(reg_read16(FPGA_STATUS),bitsToBePrintedAtLeastConstant);
