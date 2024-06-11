@@ -74,9 +74,9 @@
     },
     "terminal.integrated.defaultProfile.osx": "zsh",
     "C_Cpp.default.includePath": [
-        //"${workspaceFolder}/.conda-env/riscv-tools/riscv64-unknown-elf/include/",
+        "${workspaceFolder}/.conda-env/riscv-tools/riscv64-unknown-elf/include/",
         "${workspaceFolder}/tests"
     ],
-    "C_Cpp.autoAddFileAssociations": false,
-    "C_Cpp.errorSquiggles": "disabled"
+    //"C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.autoAddFileAssociations": false 
 }
