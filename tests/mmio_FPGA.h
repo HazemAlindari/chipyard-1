@@ -21,6 +21,7 @@
 #define FPGA_BUFFER_SIZE 256
 #define DEBUG 1
 
+//helper functions
 void print_binary(int num, int bitsToBePrintedAtLeast) {
     int bitsToBePrinted = bitsToBePrintedAtLeast;
     int binary[bitsToBePrinted];
@@ -41,25 +42,65 @@ void reset_FPGA() {
     reg_write16(FPGA_RST,0);
     printf("FPGA reset\n");
 }
-void _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, unsigned long attrOutAddress, uint64_t* data, int size) {
-    if (size > FPGA_BUFFER_SIZE) {
-        printf("Size is too large for buffer\n");
-        return;
-    }
-    //add an empty element to the buffer
+
+//input functions
+void wait_for_inputs_receive_ready_FPGA() {
+    //if input0,1 and idle state => fpga is ready and loop exits
+    while ((reg_read16(FPGA_STATUS) & 0b0010000000000001) == 0) {
+        printf("waiting for peripheral to be ready\n");
+        if (DEBUG) printf("FPGA_STATUS = 0b");
+        if (DEBUG) print_binary(reg_read16(FPGA_STATUS),bitsToBePrintedAtLeastConstant);
+    };
+    printf("peripheral is ready\n");
+}
+int write_input0_FPGA(uint64_t* data, int size) {
+    wait_for_inputs_receive_ready_FPGA();
+    return _buffer_write_FPGA(FPGA_INPUT0, FPGA_INPUT0ATTR_IN, FPGA_INPUT0ATTR_OUT, data, size);
+}
+int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, unsigned long attrOutAddress, uint8_t* data, int size) {
+
+    int byte_num = ((size % 8) * (2 ^ 13)); //byte number to be embedded in the last 3 bits of the last attrIn
+    
+    //add an empty element to the buffer if size is a multiple of 8
     int emptyElement = 0; //set to true if size is a multiple of 8
     if (size % 8 == 0) {
         if (DEBUG) printf("Size is a multiple of 8\n");
-        size = size + 1; //add one to size to write the last data
         emptyElement = 1; //set to true if size is a multiple of 8
-    } 
+        size = size + 1; //add one to size to write the last data
+    }
+
+    //fill data with 0s until it's a multiple of 8
+    while (size % 8 != 0) {
+        data[size] = 0;
+        size = size + 1;
+    }
+
+    size = size / 8; //convert size to number of 64-bit data
+    //check if size is too large for buffer
+    if (size > FPGA_BUFFER_SIZE) {
+        printf("Size is too large for buffer\n");
+        return 1;
+    }
+
+    //convert data to 64-bit
+    uint64_t data64[size];
+    for (int i = 0; i < size; i++) {
+        data64[i] = 0;
+        for (int j = 0; j < 8; j++) {
+            data64[i] = data64[i] + (data[i * 8 + j] * (2 ^ (8 * (7 - j))));
+        }
+    }
+
+    //write data to buffer
     uint16_t attrIn = 0b0000000011111111;
     for (int i = 0; i < size; i++) {
         if (DEBUG) printf("i = %d\n", i);
-        if (i >= size - 1) { //if last data, set last bit of attrIn to 0
+
+        //if last data, set last bit of attrIn to 0
+        if (i >= size - 1) { 
             attrIn = attrIn + 1; //increment attrIn
             attrIn = attrIn - 0b0000000100000000; //set last bit of attrIn to 0 //fix me later (make or operation instead of subtraction)
-            attrIn = attrIn + ((size % 8) * (2 ^ 13)); //byte_num in the last 3 bits ;TODO: fix back when you make the universal interfcace
+            attrIn = attrIn + byte_num; //add byte number to the last 3 bits of attrIn
             if (DEBUG) printf("next attrIn = 0b");
             if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
         } else {
@@ -67,18 +108,23 @@ void _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress,
             if (DEBUG) printf("next attrIn = attrIn + 1 = 0b");
             if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
         }
-        if (size == 1) { //if only one data, set last bit of attrIn to 0
+
+        //if only one data, set last bit of attrIn to 0
+        if (size == 1) { 
         if (DEBUG) printf("size = 1\n");
             attrIn = 0b0000000000000000;
         }
-        reg_write16(attrInAddress, attrIn); //write attrIn to input attribute
+        
+        //write attrIn to input attribute
+        reg_write16(attrInAddress, attrIn); 
         if (DEBUG) printf("attrIn written successfully\n");
         if (DEBUG) printf("attrIn = 0b");
         if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
         if (DEBUG) printf("attrOut = 0b");
         if (DEBUG) print_binary(reg_read16(attrOutAddress),bitsToBePrintedAtLeastConstant);
 
-        while (reg_read16(attrOutAddress) - 1 != attrIn) //check if input buffer is ready
+        //check if input buffer is ready
+        while (reg_read16(attrOutAddress) - 1 != attrIn) 
          {
             printf("Waiting for input buffer to be ready\n");
             if (DEBUG) printf("attrIn = 0b");
@@ -87,19 +133,24 @@ void _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress,
             if (DEBUG) print_binary(reg_read16(attrOutAddress),bitsToBePrintedAtLeastConstant);
         }; 
         if(DEBUG) printf("input buffer is ready\n");
-        if (i == size && emptyElement == 1) { //if last data and size is a multiple of 8, write 0 to the buffer
+
+        //if last data and size is a multiple of 8, write 0 to the buffer
+        if (i == size && emptyElement == 1) { 
             if (DEBUG) printf("Writing 0 to buffer[%d]\n", i);
             reg_write64(inputAddress,0); //write 0 to input buffer
             if (DEBUG) printf("\n\n\n");
             //continue;
         } else {
-            if (DEBUG) printf("Writing %ld to buffer[%d]\n", data[i], i);
-            reg_write64(inputAddress,data[i]); //write data to input buffer
+            if (DEBUG) printf("Writing %ld to buffer[%d]\n", data64[i], i);
+            reg_write64(inputAddress,data64[i]); //write data to input buffer
             if (DEBUG) printf("\n\n\n");
         }
     };
     if (DEBUG) printf("\n\n");
+    return 0;
 }
+
+//output functions
 void wait_for_output_ready_FPGA() {
     //if output0 is ready => fpga completed calculations and loop exits
     while ((reg_read16(FPGA_STATUS) & 0b0100000000000000)    == 0) {
@@ -108,10 +159,6 @@ void wait_for_output_ready_FPGA() {
         if (DEBUG) print_binary(reg_read16(FPGA_STATUS),bitsToBePrintedAtLeastConstant);
     };
     printf("peripheral completed\n");
-}
-void write_input0_FPGA(uint64_t* data, int size) {
-    wait_for_inputs_receive_ready_FPGA();
-    _buffer_write_FPGA(FPGA_INPUT0, FPGA_INPUT0ATTR_IN, FPGA_INPUT0ATTR_OUT, data, size);
 }
 uint64_t read_output0_FPGA() {
     return reg_read64(FPGA_OUTPUT0);
@@ -185,14 +232,6 @@ void print_outputs_FPGA() {
         printf("%ld ", read_output6_FPGA());
         printf("%ld\n", read_output7_FPGA());
 }
-void wait_for_inputs_receive_ready_FPGA() {
-    //if input0,1 and idle state => fpga is ready and loop exits
-    while ((reg_read16(FPGA_STATUS) & 0b0010000000000001) == 0) {
-        printf("waiting for peripheral to be ready\n");
-        if (DEBUG) printf("FPGA_STATUS = 0b");
-        if (DEBUG) print_binary(reg_read16(FPGA_STATUS),bitsToBePrintedAtLeastConstant);
-    };
-    printf("peripheral is ready\n");
-}
+
 
 #endif
