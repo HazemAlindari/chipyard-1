@@ -74,9 +74,10 @@
     },
     "terminal.integrated.defaultProfile.osx": "zsh",
     "C_Cpp.default.includePath": [
-        "${workspaceFolder}/.conda-env/riscv-tools/riscv64-unknown-elf/include/",
+        //"${workspaceFolder}/.conda-env/riscv-tools/riscv64-unknown-elf/include/",
         "${workspaceFolder}/tests"
     ],
     //"C_Cpp.errorSquiggles": "disabled",
-    "C_Cpp.autoAddFileAssociations": false 
+    "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.default.compilerPath": "/home/hazem/chipyard/.conda-env/riscv-tools/bin/riscv64-unknown-elf-gcc"
 }
