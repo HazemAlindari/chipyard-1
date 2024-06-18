@@ -3,7 +3,7 @@
 #define __FPGA_MMIO_H__
 #include "mmio.h"
 #include <stdio.h>
-
+#include <math.h>
 #define FPGA_STATUS 0x5000
 #define FPGA_RST 0x5002
 #define FPGA_INPUT0ATTR_IN 0x5004
@@ -55,7 +55,10 @@ void wait_for_inputs_receive_ready_FPGA() {
 }
 int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, unsigned long attrOutAddress, uint8_t data[], int size) {
 
-    int byte_num = ((size % 8) * (2 ^ 13)); //byte number to be embedded in the last 3 bits of the last attrIn
+    int byte_num = ((size % 8) * pow(2,13)); //byte number to be embedded in the last 3 bits of the last attrIn
+    if (DEBUG) printf("size = %d\n", size);
+    if (DEBUG) printf("size mod 8 = %d\n", size % 8);
+    if (DEBUG) printf("2 ^ 13 = %f\n", pow(2, 13));
     if (DEBUG) printf("byte_num = ");
     if (DEBUG) print_binary(byte_num,bitsToBePrintedAtLeastConstant);
     if (DEBUG) printf("\n");
@@ -88,10 +91,26 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
     uint64_t data64[size];
     for (int i = 0; i < size; i++) {
         if (DEBUG) printf("i = %d\n", i);
-        data64[i] = (uint64_t)data[(i * 8) + 7] << (uint64_t) 56 | (uint64_t)data[(i * 8) + 6] << (uint64_t) 48 | (uint64_t)data[(i * 8) + 5] << (uint64_t) 40 | (uint64_t)data[(i * 8) + 4] << (uint64_t) 32 | (uint64_t)data[(i * 8) + 3] << (uint64_t) 24 | (uint64_t)data[(i * 8) + 2] << (uint64_t) 16 | (uint64_t)data[(i * 8) + 1] << (uint64_t) 8 | (uint64_t)data[(i * 8)];
-        if (DEBUG) printf("data64[%d] = %#lx ", i, data64[i]);
-        if (DEBUG) print_binary(data64[i],64);
-        if (DEBUG) printf("\n");
+        {
+            if (DEBUG) printf("data[%d] = %#x \n", (i * 8) + 0, data[(i * 8) + 0]);
+            if (DEBUG) printf("data[%d] = %#x \n", (i * 8) + 1, data[(i * 8) + 1]);
+            if (DEBUG) printf("data[%d] = %#x \n", (i * 8) + 2, data[(i * 8) + 2]);
+            if (DEBUG) printf("data[%d] = %#x \n", (i * 8) + 3, data[(i * 8) + 3]);
+            if (DEBUG) printf("data[%d] = %#x \n", (i * 8) + 4, data[(i * 8) + 4]);
+            if (DEBUG) printf("data[%d] = %#x \n", (i * 8) + 5, data[(i * 8) + 5]);
+            if (DEBUG) printf("data[%d] = %#x \n", (i * 8) + 6, data[(i * 8) + 6]);
+            if (DEBUG) printf("data[%d] = %#x \n", (i * 8) + 7, data[(i * 8) + 7]);
+            if (DEBUG) printf("moved data[%d] = %016lx \n", (i * 8) + 0, (uint64_t)data[(i * 8) + 0] * (uint64_t) pow(2, 56));
+            if (DEBUG) printf("moved data[%d] = %016lx \n", (i * 8) + 1, (uint64_t)data[(i * 8) + 1] * (uint64_t) pow(2, 48));
+            if (DEBUG) printf("moved data[%d] = %016lx \n", (i * 8) + 2, (uint64_t)data[(i * 8) + 2] * (uint64_t) pow(2, 40));
+            if (DEBUG) printf("moved data[%d] = %016lx \n", (i * 8) + 3, (uint64_t)data[(i * 8) + 3] * (uint64_t) pow(2, 32));
+            if (DEBUG) printf("moved data[%d] = %016lx \n", (i * 8) + 4, (uint64_t)data[(i * 8) + 4] * (uint64_t) pow(2, 24));
+            if (DEBUG) printf("moved data[%d] = %016lx \n", (i * 8) + 5, (uint64_t)data[(i * 8) + 5] * (uint64_t) pow(2, 16));
+            if (DEBUG) printf("moved data[%d] = %016lx \n", (i * 8) + 6, (uint64_t)data[(i * 8) + 6] * (uint64_t) pow(2, 8));
+            if (DEBUG) printf("moved data[%d] = %016lx \n", (i * 8) + 7, (uint64_t)data[(i * 8) + 7] * (uint64_t) pow(2, 0));
+        }
+        data64[i] = (uint64_t) data[(i * 8) + 0] * (uint64_t) pow(2, 56) | (uint64_t)data[(i * 8) + 1] * (uint64_t) pow(2, 48) | (uint64_t)data[(i * 8) + 2] * (uint64_t) pow(2, 40) | (uint64_t)data[(i * 8) + 3] * (uint64_t) pow(2, 32) | (uint64_t)data[(i * 8) + 4] * (uint64_t) pow(2, 24) | (uint64_t)data[(i * 8) + 5] * (uint64_t) pow(2, 16) | (uint64_t)data[(i * 8) + 6] * (uint64_t) pow(2, 8) | (uint64_t)data[(i * 8) + 7] * (uint64_t) pow(2, 0);
+        if (DEBUG) printf("data64[%d] = %#lx \n", i, data64[i]);
     }
 
     //write data to buffer

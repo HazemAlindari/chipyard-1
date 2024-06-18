@@ -24,7 +24,7 @@ int main(void)
     uint64_t output[8], ref[8];
     reset_FPGA();
 
-    uint8_t input[] = {0b01010100 ,0b01101000 ,0b01100101 ,0b00100000 ,0b01110001 ,0b01110101 ,0b01101001 ,0b01100011};
+    uint8_t input[] = {0b01010100 ,0b01101000 ,0b01100101 ,0b00100000 ,0b01110001 ,0b01110101 ,0b01101001 ,0b01100011, 0b01101011, 0b00101110};
     int input0Size = sizeof(input) / sizeof(input[0]);
 
     reset_FPGA();
@@ -66,7 +66,6 @@ int main(void)
         printf("Hardware result is correct for sha3\n");
         printf("Got back: %#lx, %#lx, %#lx, %#lx, %#lx, %lx, %lx, %lx\n", output[0], output[1], output[2], output[3], output[4], output[5], output[6], output[7]);
     }
-
 
     return 0;
 }
