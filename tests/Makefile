@@ -30,7 +30,7 @@ include libgloss.mk
 PROGRAMS = pwm blkdev accum charcount nic-loopback big-blkdev pingd \
            streaming-passthrough streaming-fir nvdla spiflashread spiflashwrite fft gcd \
            hello mt-hello symmetric testCPU testAsserts testSizeOf \
-		   #testSHA3
+		   testSHA3
 
 
 .DEFAULT_GOAL := default

@@ -34,7 +34,6 @@ void print_binary(int num, int bitsToBePrintedAtLeast) {
     for (int j = 0; j < bitsToBePrinted; j++) {
         printf("%d", binary[j]);
     }
-    printf("\n");
 }
 void reset_FPGA() {
     uint8_t rst = 0b11111111;
@@ -50,29 +49,32 @@ void wait_for_inputs_receive_ready_FPGA() {
         printf("waiting for peripheral to be ready\n");
         if (DEBUG) printf("FPGA_STATUS = 0b");
         if (DEBUG) print_binary(reg_read16(FPGA_STATUS),bitsToBePrintedAtLeastConstant);
+        if (DEBUG) printf("\n");
     };
     printf("peripheral is ready\n");
 }
-int write_input0_FPGA(uint64_t* data, int size) {
-    wait_for_inputs_receive_ready_FPGA();
-    return _buffer_write_FPGA(FPGA_INPUT0, FPGA_INPUT0ATTR_IN, FPGA_INPUT0ATTR_OUT, data, size);
-}
-int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, unsigned long attrOutAddress, uint8_t* data, int size) {
+int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, unsigned long attrOutAddress, uint8_t data[], int size) {
 
     int byte_num = ((size % 8) * (2 ^ 13)); //byte number to be embedded in the last 3 bits of the last attrIn
-    
+    if (DEBUG) printf("byte_num = ");
+    if (DEBUG) print_binary(byte_num,bitsToBePrintedAtLeastConstant);
+    if (DEBUG) printf("\n");
+
     //add an empty element to the buffer if size is a multiple of 8
-    int emptyElement = 0; //set to true if size is a multiple of 8
+    //int emptyElement = 0; //set to true if size is a multiple of 8
     if (size % 8 == 0) {
-        if (DEBUG) printf("Size is a multiple of 8\n");
-        emptyElement = 1; //set to true if size is a multiple of 8
+        if (DEBUG) printf("Size is a multiple of 8, add 1 to it\n");
+        //emptyElement = 1; //set to true if size is a multiple of 8
         size = size + 1; //add one to size to write the last data
+        if (DEBUG) printf("New size = %d\n", size);
     }
 
     //fill data with 0s until it's a multiple of 8
     while (size % 8 != 0) {
+        if (DEBUG) printf("size in not a multiple of 8, adding 0 to data[%d]\n", size);
         data[size] = 0;
         size = size + 1;
+        if (DEBUG) printf("New size = %d\n", size);
     }
 
     size = size / 8; //convert size to number of 64-bit data
@@ -85,10 +87,11 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
     //convert data to 64-bit
     uint64_t data64[size];
     for (int i = 0; i < size; i++) {
-        data64[i] = 0;
-        for (int j = 0; j < 8; j++) {
-            data64[i] = data64[i] + (data[i * 8 + j] * (2 ^ (8 * (7 - j))));
-        }
+        if (DEBUG) printf("i = %d\n", i);
+        data64[i] = (uint64_t)data[(i * 8) + 7] << (uint64_t) 56 | (uint64_t)data[(i * 8) + 6] << (uint64_t) 48 | (uint64_t)data[(i * 8) + 5] << (uint64_t) 40 | (uint64_t)data[(i * 8) + 4] << (uint64_t) 32 | (uint64_t)data[(i * 8) + 3] << (uint64_t) 24 | (uint64_t)data[(i * 8) + 2] << (uint64_t) 16 | (uint64_t)data[(i * 8) + 1] << (uint64_t) 8 | (uint64_t)data[(i * 8)];
+        if (DEBUG) printf("data64[%d] = %#lx ", i, data64[i]);
+        if (DEBUG) print_binary(data64[i],64);
+        if (DEBUG) printf("\n");
     }
 
     //write data to buffer
@@ -103,10 +106,12 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
             attrIn = attrIn + byte_num; //add byte number to the last 3 bits of attrIn
             if (DEBUG) printf("next attrIn = 0b");
             if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
+            if (DEBUG) printf("\n");
         } else {
             attrIn = attrIn + 1; //increment attrIn
             if (DEBUG) printf("next attrIn = attrIn + 1 = 0b");
             if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
+            if (DEBUG) printf("\n");
         }
 
         //if only one data, set last bit of attrIn to 0
@@ -120,8 +125,10 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
         if (DEBUG) printf("attrIn written successfully\n");
         if (DEBUG) printf("attrIn = 0b");
         if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
+        if (DEBUG) printf("\n");
         if (DEBUG) printf("attrOut = 0b");
         if (DEBUG) print_binary(reg_read16(attrOutAddress),bitsToBePrintedAtLeastConstant);
+        if (DEBUG) printf("\n");
 
         //check if input buffer is ready
         while (reg_read16(attrOutAddress) - 1 != attrIn) 
@@ -129,13 +136,15 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
             printf("Waiting for input buffer to be ready\n");
             if (DEBUG) printf("attrIn = 0b");
             if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
+            if (DEBUG) printf("\n");
             if (DEBUG) printf("attrOut = 0b");
             if (DEBUG) print_binary(reg_read16(attrOutAddress),bitsToBePrintedAtLeastConstant);
+            if (DEBUG) printf("\n");
         }; 
         if(DEBUG) printf("input buffer is ready\n");
 
         //if last data and size is a multiple of 8, write 0 to the buffer
-        if (i == size && emptyElement == 1) { 
+        /* if (i == size && emptyElement == 1) { 
             if (DEBUG) printf("Writing 0 to buffer[%d]\n", i);
             reg_write64(inputAddress,0); //write 0 to input buffer
             if (DEBUG) printf("\n\n\n");
@@ -144,12 +153,18 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
             if (DEBUG) printf("Writing %ld to buffer[%d]\n", data64[i], i);
             reg_write64(inputAddress,data64[i]); //write data to input buffer
             if (DEBUG) printf("\n\n\n");
-        }
+        } */
+        if (DEBUG) printf("Writing %#lx to buffer[%d]\n", data64[i], i);
+        reg_write64(inputAddress,data64[i]); //write data to input buffer
+        if (DEBUG) printf("\n\n\n");
     };
     if (DEBUG) printf("\n\n");
     return 0;
 }
-
+int write_input0_FPGA(uint8_t data[], int size) {
+    wait_for_inputs_receive_ready_FPGA();
+    return _buffer_write_FPGA(FPGA_INPUT0, FPGA_INPUT0ATTR_IN, FPGA_INPUT0ATTR_OUT, data, size);
+}
 //output functions
 void wait_for_output_ready_FPGA() {
     //if output0 is ready => fpga completed calculations and loop exits
@@ -157,6 +172,7 @@ void wait_for_output_ready_FPGA() {
         printf("waiting for peripheral to complete\n");
         if (DEBUG) printf("FPGA_STATUS = 0b");
         if (DEBUG) print_binary(reg_read16(FPGA_STATUS),bitsToBePrintedAtLeastConstant);
+        if (DEBUG) printf("\n");
     };
     printf("peripheral completed\n");
 }
@@ -184,18 +200,16 @@ uint64_t read_output6_FPGA() {
 uint64_t read_output7_FPGA() {
     return reg_read64(FPGA_OUTPUT7);
 }
-uint512_t read_outputs_FPGA() {
-        uint512_t outputs;
-        memset (&outputs, 0, sizeof(outputs));
-        outputs.val0 = read_output0_FPGA();
-        outputs.val1 = read_output1_FPGA();
-        outputs.val2 = read_output2_FPGA();
-        outputs.val3 = read_output3_FPGA();
-        outputs.val4 = read_output4_FPGA();
-        outputs.val5 = read_output5_FPGA();
-        outputs.val6 = read_output6_FPGA();
-        outputs.val7 = read_output7_FPGA();
-        return outputs;
+void read_outputs_FPGA(uint64_t output[]) {
+        output[0] = read_output0_FPGA();
+        output[1] = read_output1_FPGA();
+        output[2] = read_output2_FPGA();
+        output[3] = read_output3_FPGA();
+        output[4] = read_output4_FPGA();
+        output[5] = read_output5_FPGA();
+        output[6] = read_output6_FPGA();
+        output[7] = read_output7_FPGA();
+        return;
 }
 void print_output0_FPGA() {
     printf("Output0 = %ld\n", read_output0_FPGA());
@@ -223,14 +237,14 @@ void print_output7_FPGA() {
 }
 void print_outputs_FPGA() {
         printf("Output = ");
-        printf("%ld ", read_output0_FPGA());
-        printf("%ld ", read_output1_FPGA());
-        printf("%ld ", read_output2_FPGA());
-        printf("%ld ", read_output3_FPGA());
-        printf("%ld ", read_output4_FPGA());
-        printf("%ld ", read_output5_FPGA());
-        printf("%ld ", read_output6_FPGA());
-        printf("%ld\n", read_output7_FPGA());
+        printf("%ld", read_output7_FPGA());
+        printf("%ld", read_output6_FPGA());
+        printf("%ld", read_output5_FPGA());
+        printf("%ld", read_output4_FPGA());
+        printf("%ld", read_output3_FPGA());
+        printf("%ld", read_output2_FPGA());
+        printf("%ld", read_output1_FPGA());
+        printf("%ld\n", read_output0_FPGA());
 }
 
 
