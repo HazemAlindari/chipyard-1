@@ -63,17 +63,6 @@ typedef __uint64_t uint64_t ;
 #define __int64_t_defined 1
 #endif /* ___int64_t_defined */
 
-typedef struct {
-    uint64_t val0;
-    uint64_t val1;
-    uint64_t val2;
-    uint64_t val3;
-    uint64_t val4;
-    uint64_t val5;
-    uint64_t val6;
-    uint64_t val7;
-} uint512_t;
-
 #ifndef _INTMAX_T_DECLARED
 typedef __intmax_t intmax_t;
 #define _INTMAX_T_DECLARED
