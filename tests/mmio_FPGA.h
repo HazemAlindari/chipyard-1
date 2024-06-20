@@ -19,7 +19,7 @@
 #define FPGA_OUTPUT7 0x5050
 #define bitsToBePrintedAtLeastConstant 16
 #define FPGA_BUFFER_SIZE 256
-#define DEBUG 1
+#define DEBUG 0
 
 //helper functions
 void print_binary(int num, int bitsToBePrintedAtLeast) {
@@ -115,6 +115,7 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
 
     //write data to buffer
     uint16_t attrIn = 0b0000000011111111;
+    attrIn = attrIn + byte_num; //add byte number to the last 3 bits of attrIn
     if (DEBUG) printf("size = %d\n", size);
     for (int i = 0; i < size; i++) {
         if (DEBUG) printf("i = %d\n", i);
@@ -123,7 +124,6 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
         if (i >= size - 1) { 
             attrIn = attrIn + 1; //increment attrIn
             attrIn = attrIn - 0b0000000100000000; //set last bit of attrIn to 0 //fix me later (make or operation instead of subtraction)
-            attrIn = attrIn + byte_num; //add byte number to the last 3 bits of attrIn
             if (DEBUG) printf("next attrIn = 0b");
             if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
             if (DEBUG) printf("\n");
@@ -133,7 +133,7 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
             if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
             if (DEBUG) printf("\n");
         }
-
+        
         //if only one data, set last bit of attrIn to 0
         if (size == 1) { 
         if (DEBUG) printf("size = 1\n");
@@ -151,29 +151,16 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
         if (DEBUG) printf("\n");
 
         //check if input buffer is ready
-         if (i >= size - 1) { 
-            while (reg_read16(attrOutAddress) - 1 != attrIn - byte_num) 
-            {
-                printf("Waiting for input buffer to be ready\n");
-                if (DEBUG) printf("attrIn = 0b");
-                if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
-                if (DEBUG) printf("\n");
-                if (DEBUG) printf("attrOut = 0b");
-                if (DEBUG) print_binary(reg_read16(attrOutAddress),bitsToBePrintedAtLeastConstant);
-                if (DEBUG) printf("\n");
-            }; 
-         } else {
-            while (reg_read16(attrOutAddress) - 1 != attrIn) 
-            {
-                printf("Waiting for input buffer to be ready\n");
-                if (DEBUG) printf("attrIn = 0b");
-                if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
-                if (DEBUG) printf("\n");
-                if (DEBUG) printf("attrOut = 0b");
-                if (DEBUG) print_binary(reg_read16(attrOutAddress),bitsToBePrintedAtLeastConstant);
-                if (DEBUG) printf("\n");
-            }; 
-        }
+        while (reg_read16(attrOutAddress) - 1 != attrIn - byte_num) 
+        {
+            printf("Waiting for input buffer to be ready\n");
+            if (DEBUG) printf("attrIn = 0b");
+            if (DEBUG) print_binary(attrIn,bitsToBePrintedAtLeastConstant);
+            if (DEBUG) printf("\n");
+            if (DEBUG) printf("attrOut = 0b");
+            if (DEBUG) print_binary(reg_read16(attrOutAddress),bitsToBePrintedAtLeastConstant);
+            if (DEBUG) printf("\n");
+        }; 
         if(DEBUG) printf("input buffer is ready\n");
 
         //if last data and size is a multiple of 8, write 0 to the buffer
