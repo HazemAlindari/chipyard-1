@@ -16,16 +16,10 @@
 //FPGA test
 int main(void)
 {
-    //uint64_t z, ref, x = 20, y = 15;
-    //uint64_t input0[] = {x,0};
-    //uint64_t input1[] = {y,0,0};
-    //int input0Size = sizeof(input0) / sizeof(input0[0]);
-    //int input1Size = sizeof(input1) / sizeof(input1[0]);
     uint64_t output[8], ref[8];
     reset_FPGA();
 
     uint8_t input[] = {0b01010100 ,0b01101000 ,0b01100101 ,0b00100000 ,0b01110001 ,0b01110101 ,0b01101001 ,0b01100011, 0b01101011, 0b00101110};
-    //uint8_t input[] = {0b01010100 ,0b01101000 ,0b01100101 ,0b00100000 ,0b01110001 ,0b01110101 ,0b01101001 ,0b01100011};
     int input0Size = sizeof(input) / sizeof(input[0]);
 
     reset_FPGA();

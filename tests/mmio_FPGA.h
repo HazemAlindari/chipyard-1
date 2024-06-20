@@ -64,10 +64,8 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
     if (DEBUG) printf("\n");
 
     //add an empty element to the buffer if size is a multiple of 8
-    //int emptyElement = 0; //set to true if size is a multiple of 8
     if (size % 8 == 0) {
         if (DEBUG) printf("Size is a multiple of 8, add 1 to it\n");
-        //emptyElement = 1; //set to true if size is a multiple of 8
         size = size + 1; //add one to size to write the last data
         if (DEBUG) printf("New size = %d\n", size);
     }
@@ -163,17 +161,7 @@ int _buffer_write_FPGA(unsigned long inputAddress, unsigned long attrInAddress, 
         }; 
         if(DEBUG) printf("input buffer is ready\n");
 
-        //if last data and size is a multiple of 8, write 0 to the buffer
-        /* if (i == size && emptyElement == 1) { 
-            if (DEBUG) printf("Writing 0 to buffer[%d]\n", i);
-            reg_write64(inputAddress,0); //write 0 to input buffer
-            if (DEBUG) printf("\n\n\n");
-            //continue;
-        } else {
-            if (DEBUG) printf("Writing %ld to buffer[%d]\n", data64[i], i);
-            reg_write64(inputAddress,data64[i]); //write data to input buffer
-            if (DEBUG) printf("\n\n\n");
-        } */
+        //write data to input buffer
         if (DEBUG) printf("Writing %#lx to buffer[%d]\n", data64[i], i);
         reg_write64(inputAddress,data64[i]); //write data to input buffer
         if (DEBUG) printf("\n\n\n");
