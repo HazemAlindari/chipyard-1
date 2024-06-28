@@ -3,37 +3,6 @@
         "**/._*": true,
         "**/.*": true
     },
-    "terminal.integrated.profiles.osx": {
-
-        "bash": {
-            "path": "bash",
-            "args": [
-                "-l"
-            ],
-            "icon": "terminal-bash"
-        },
-        "zsh": {
-            "path": "zsh",
-            "args": [
-                "-l",
-               "-c", "chipyard"
-            ]
-        },
-        "fish": {
-            "path": "fish",
-            "args": [
-                "-l"
-            ]
-        },
-        "tmux": {
-            "path": "tmux",
-            "icon": "terminal-tmux"
-        },
-        "pwsh": {
-            "path": "pwsh",
-            "icon": "terminal-powershell"
-        }
-    },
     "highlight.regexes": {
         "(.*)(FPGASettings.DEBUG)(.*)": [ // A regex will be created from this string, don't forget to double escape it
         { "color": "#5e6559" }, // Decoration options to apply to the first capturing group, in this case "//TODO"
@@ -79,5 +48,5 @@
     ],
     //"C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.autoAddFileAssociations": false,
-    "C_Cpp.default.compilerPath": "/home/hazem/chipyard/.conda-env/riscv-tools/bin/riscv64-unknown-elf-gcc"
+    "C_Cpp.default.compilerPath": ".conda-env/riscv-tools/bin/riscv64-unknown-elf-gcc"
 }
