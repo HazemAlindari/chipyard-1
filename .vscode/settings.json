@@ -48,5 +48,6 @@
     ],
     //"C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.autoAddFileAssociations": false,
-    "C_Cpp.default.compilerPath": ".conda-env/riscv-tools/bin/riscv64-unknown-elf-gcc"
+    "C_Cpp.default.compilerPath": ".conda-env/riscv-tools/bin/riscv64-unknown-elf-gcc",
+    "python.envFile": "${workspaceFolder}/env.sh"
 }
