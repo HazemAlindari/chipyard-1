@@ -2,6 +2,7 @@
 #define __MMIO_H__
 
 #include <stdint.h>
+#include <stdbool.h>
 
 static inline void reg_write8(uintptr_t addr, uint8_t data)
 {
@@ -39,15 +40,28 @@ static inline uint32_t reg_read32(uintptr_t addr)
 	return *ptr;
 }
 
-static inline void reg_write64(unsigned long addr, uint64_t data)
+static inline void reg_write64(uintptr_t addr, uint64_t data)
 {
 	volatile uint64_t *ptr = (volatile uint64_t *) addr;
 	*ptr = data;
 }
 
-static inline uint64_t reg_read64(unsigned long addr)
+static inline uint64_t reg_read64(uintptr_t addr)
 {
 	volatile uint64_t *ptr = (volatile uint64_t *) addr;
 	return *ptr;
 }
+
+static inline void reg_write1(uintptr_t addr, bool data)
+{
+	volatile bool *ptr = (volatile bool *) addr;
+	*ptr = data;
+}
+
+static inline bool reg_read1(uintptr_t addr)
+{
+	volatile bool *ptr = (volatile bool *) addr;
+	return *ptr;
+}
+
 #endif
