@@ -35,6 +35,10 @@
         {
             "filePath": "generators/fpga/c_files",
             "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/config/RocketFPGAConfigs.scala",
+            "group": "Default"
         }
     ],
     "files.associations": {
