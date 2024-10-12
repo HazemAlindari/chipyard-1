@@ -50,5 +50,5 @@
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.default.compilerPath": ".conda-env/riscv-tools/bin/riscv64-unknown-elf-gcc",
     //"python.envFile": "${workspaceFolder}/env.sh",
-    "python.terminal.activateEnvironment": true
-}
+    "python.terminal.activateEnvironment": true,
+    "python.defaultInterpreterPath": "${workspaceFolder}/.conda-env/bin/python3"}
