@@ -27,7 +27,7 @@ LDFLAGS = -static
 
 include libgloss.mk
 
-PROGRAMS = testSHA3
+PROGRAMS = testSHA3Low64Bit testSHA3Low32Bit testSHA3High64Bit
 #pwm blkdev accum charcount nic-loopback big-blkdev pingd streaming-passthrough streaming-fir nvdla spiflashread spiflashwrite fft gcd hello mt-hello symmetric testCPU testAsserts testSizeOf
 
 

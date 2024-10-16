@@ -1,1 +1,1 @@
-/home/hazem/chipyard/generators/fpga/config/RocketFPGAConfigs.scala
+../../../../../fpga/config/RocketFPGAConfigs.scala
