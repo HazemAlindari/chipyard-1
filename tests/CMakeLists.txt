@@ -125,6 +125,10 @@ add_dump_target(gcd)
 add_dump_target(hello)
 add_dump_target(mt-hello)
 add_dump_target(symmetric)
+add_dump_target(testSHA3High32)
+add_dump_target(testSHA3High64)
+add_dump_target(testSHA3Low32)
+add_dump_target(testSHA3Low64)
 
 
 # Add custom command to generate spiflash.img from spiflash.py
