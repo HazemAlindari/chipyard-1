@@ -5,7 +5,8 @@ import org.chipsalliance.cde.config._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.devices.debug._
 import freechips.rocketchip.devices.tilelink._
-import freechips.rocketchip.diplomacy._
+import org.chipsalliance.diplomacy._
+import org.chipsalliance.diplomacy.lazymodule._
 import freechips.rocketchip.system._
 import freechips.rocketchip.tile._
 
@@ -32,12 +33,7 @@ class WithArty100TTweaks(freqMHz: Double = 50) extends Config(
   new testchipip.tsi.WithUARTTSIClient ++
   new chipyard.harness.WithSerialTLTiedOff ++
   new chipyard.harness.WithHarnessBinderClockFreqMHz(freqMHz) ++
-  new chipyard.config.WithMemoryBusFrequency(freqMHz) ++
-  new chipyard.config.WithFrontBusFrequency(freqMHz) ++
-  new chipyard.config.WithSystemBusFrequency(freqMHz) ++
-  new chipyard.config.WithPeripheryBusFrequency(freqMHz) ++
-  new chipyard.config.WithControlBusFrequency(freqMHz) ++
-  new chipyard.config.WithOffchipBusFrequency(freqMHz) ++
+  new chipyard.config.WithUniformBusFrequencies(freqMHz) ++
   new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
   new chipyard.clocking.WithPassthroughClockGenerator ++
   new chipyard.config.WithTLBackingMemory ++ // FPGA-shells converts the AXI to TL for us
@@ -58,5 +54,5 @@ class NoCoresArty100TConfig extends Config(
 class BringupArty100TConfig extends Config(
   new WithArty100TSerialTLToGPIO ++
   new WithArty100TTweaks(freqMHz = 50) ++
-  new testchipip.serdes.WithSerialTLPHYParams(testchipip.serdes.InternalSyncSerialParams(freqMHz=50)) ++
+  new testchipip.serdes.WithSerialTLPHYParams(testchipip.serdes.InternalSyncSerialPhyParams(freqMHz=50)) ++
   new chipyard.ChipBringupHostConfig)

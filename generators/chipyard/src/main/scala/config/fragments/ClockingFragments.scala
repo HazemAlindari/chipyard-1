@@ -89,9 +89,12 @@ class WithFbusToSbusCrossingType(xType: ClockCrossingType) extends Config((site,
   * Mixins to set the dtsFrequency field of BusParams -- these will percolate its way
   * up the diplomatic graph to the clock sources.
   */
-class WithPeripheryBusFrequency(freqMHz: Double) extends Config((site, here, up) => {
-  case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(BigInt((freqMHz * 1e6).toLong)))
-})
+class WithPeripheryBusFrequency(freqMHz: Double) extends Config(
+  new freechips.rocketchip.subsystem.WithTimebase((freqMHz * 1e3).toLong) ++ // Match DTS timebase to PBUS (i.e. RTC) frequency. Makes RTC 'tick' at the PBUS rate.
+  new Config((site, here, up) => {
+    case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(BigInt((freqMHz * 1e6).toLong)))
+  })
+)
 class WithMemoryBusFrequency(freqMHz: Double) extends Config((site, here, up) => {
   case MemoryBusKey => up(MemoryBusKey, site).copy(dtsFrequency = Some(BigInt((freqMHz * 1e6).toLong)))
 })
@@ -107,6 +110,14 @@ class WithControlBusFrequency(freqMHz: Double) extends Config((site, here, up) =
 class WithOffchipBusFrequency(freqMHz: Double) extends Config((site, here, up) => {
   case OffchipBusKey => up(OffchipBusKey, site).copy(dtsFrequency = Some(BigInt((freqMHz * 1e6).toLong)))
 })
+class WithUniformBusFrequencies(freqMHz: Double) extends Config(
+  new WithPeripheryBusFrequency(freqMHz) ++
+  new WithSystemBusFrequency(freqMHz) ++
+  new WithFrontBusFrequency(freqMHz) ++
+  new WithControlBusFrequency(freqMHz) ++
+  new WithOffchipBusFrequency(freqMHz) ++
+  new WithMemoryBusFrequency(freqMHz)
+)
 
 class WithRationalMemoryBusCrossing extends WithSbusToMbusCrossingType(RationalCrossing(Symmetric))
 class WithAsynchrousMemoryBusCrossing extends WithSbusToMbusCrossingType(AsynchronousCrossing())

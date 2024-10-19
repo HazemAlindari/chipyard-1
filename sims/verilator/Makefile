@@ -129,7 +129,7 @@ CHIPYARD_VERILATOR_FLAGS := \
 # options dependent on whether external IP (cva6/NVDLA) or just chipyard is used
 # NOTE: defer the evaluation of this until it is used!
 PLATFORM_OPTS = $(shell \
-	if grep -qiP "module\s+(CVA6|NVDLA)" $(GEN_COLLATERAL_DIR)/*.*v; \
+	if grep -qiP "module\s+(CVA6|NVDLA|Ara)" $(GEN_COLLATERAL_DIR)/*.*v; \
 	then echo "$(VERILOG_IP_VERILATOR_FLAGS)"; \
 	else echo "$(CHIPYARD_VERILATOR_FLAGS)"; fi)
 
@@ -154,6 +154,7 @@ VERILATOR_NONCC_OPTS = \
 	$(VERILATOR_PREPROC_DEFINES) \
 	--top-module $(TB) \
 	--vpi \
+	$(addprefix +incdir+,$(EXT_INCDIRS)) \
 	-f $(sim_common_files)
 
 #----------------------------------------------------------------------------------------

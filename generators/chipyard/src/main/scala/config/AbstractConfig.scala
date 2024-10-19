@@ -20,6 +20,7 @@ class AbstractConfig extends Config(
   new chipyard.harness.WithSimTSIOverSerialTL ++                   /** add external serial-adapter and RAM */
   new chipyard.harness.WithSimJTAGDebug ++                         /** add SimJTAG if JTAG for debug exposed */
   new chipyard.harness.WithSimDMI ++                               /** add SimJTAG if DMI exposed */
+  new chipyard.harness.WithGPIOPinsTiedOff ++                      /** tie-off chiptop GPIO-pins, if GPIO-punchthrough is used */
   new chipyard.harness.WithGPIOTiedOff ++                          /** tie-off chiptop GPIOs, if GPIOs are present */
   new chipyard.harness.WithSimSPIFlashModel ++                     /** add simulated SPI flash memory, if SPI is enabled */
   new chipyard.harness.WithSimAXIMMIO ++                           /** add SimAXIMem for axi4 mmio port, if enabled */
@@ -58,6 +59,7 @@ class AbstractConfig extends Config(
   new chipyard.iobinders.WithNICIOPunchthrough ++
   new chipyard.iobinders.WithTraceIOPunchthrough ++
   new chipyard.iobinders.WithUARTTSIPunchthrough ++
+  new chipyard.iobinders.WithGCDBusyPunchthrough ++
   new chipyard.iobinders.WithNMITiedOff ++
 
 
@@ -67,8 +69,8 @@ class AbstractConfig extends Config(
   // External memory section
   new testchipip.serdes.WithSerialTL(Seq(                           /** add a serial-tilelink interface */
     testchipip.serdes.SerialTLParams(
-      client = Some(testchipip.serdes.SerialTLClientParams(idBits=4)), /** serial-tilelink interface will master the FBUS, and support 4 idBits */
-      phyParams = testchipip.serdes.ExternalSyncSerialParams(width=32) /** serial-tilelink interface with 32 lanes */
+      client = Some(testchipip.serdes.SerialTLClientParams(totalIdBits=4)), // serial-tilelink interface will master the FBUS, and support 4 idBits
+      phyParams = testchipip.serdes.ExternalSyncSerialPhyParams(phitWidth=32, flitWidth=32) // serial-tilelink interface with 32 lanes
     )
   )) ++
   new freechips.rocketchip.subsystem.WithNMemoryChannels(1) ++         /** Default 1 AXI-4 memory channels */
@@ -120,7 +122,6 @@ class AbstractConfig extends Config(
   // Bus/interconnect settings
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++     /** hierarchical buses including sbus/mbus/pbus/fbus/cbus/l2 */
 
-
   // ================================================
   //   Set up power, reset and clocking
   // ================================================
@@ -133,7 +134,7 @@ class AbstractConfig extends Config(
   new freechips.rocketchip.subsystem.WithDontDriveBusClocksFromSBus ++  /** leave the bus clocks undriven by sbus */
   new freechips.rocketchip.subsystem.WithClockGateModel ++              /** add default EICG_wrapper clock gate model */
   new chipyard.clocking.WithClockGroupsCombinedByName(("uncore",        /** create a "uncore" clock group tieing all the bus clocks together */
-    Seq("sbus", "mbus", "pbus", "fbus", "cbus", "obus", "implicit", "clock_tap"), 
+    Seq("sbus", "mbus", "pbus", "fbus", "cbus", "obus", "implicit", "clock_tap"),
     Seq("tile"))) ++
 
   new chipyard.config.WithPeripheryBusFrequency(500.0) ++           /** Default 500 MHz pbus */

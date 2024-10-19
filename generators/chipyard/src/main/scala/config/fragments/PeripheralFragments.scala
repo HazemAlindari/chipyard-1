@@ -7,10 +7,9 @@ import chisel3.util.{log2Up}
 import org.chipsalliance.cde.config.{Config}
 import freechips.rocketchip.devices.tilelink.{BootROMLocated, PLICKey, CLINTKey}
 import freechips.rocketchip.devices.debug.{Debug, ExportDebug, DebugModuleKey, DMI, JtagDTMKey, JtagDTMConfig}
-import freechips.rocketchip.diplomacy.{AsynchronousCrossing}
+import freechips.rocketchip.prci.{AsynchronousCrossing}
 import chipyard.stage.phases.TargetDirKey
 import freechips.rocketchip.subsystem._
-import freechips.rocketchip.tile.{XLen}
 
 import sifive.blocks.devices.gpio._
 import sifive.blocks.devices.uart._
@@ -36,7 +35,7 @@ class WithBootROM(address: BigInt = 0x10000, size: Int = 0x10000, hang: BigInt =
         address = address,
         size = size,
         hang = hang,
-        contentFileName = s"${site(TargetDirKey)}/bootrom.rv${site(XLen)}.img"
+        contentFileName = s"${site(TargetDirKey)}/bootrom.rv${site(MaxXLen)}.img"
       ))
 })
 
@@ -66,11 +65,12 @@ class WithNoUART extends Config((site, here, up) => {
   * @param address the address of the UART device
   * @param baudrate the baudrate of the UART device
   */
-class WithUART(baudrate: BigInt = 115200, address: BigInt = 0x10020000) extends Config ((site, here, up) => {
+class WithUART(baudrate: BigInt = 115200, address: BigInt = 0x10020000, txEntries: Int = 8, rxEntries: Int = 8) extends Config ((site, here, up) => {
   case PeripheryUARTKey => up(PeripheryUARTKey) ++ Seq(
-    UARTParams(address = address, nTxEntries = 256, nRxEntries = 256, initBaudRate = baudrate))
+    UARTParams(address = address, nTxEntries = txEntries, nRxEntries = rxEntries, initBaudRate = baudrate))
 })
 
+// @deprecated("Use WithUART instead of WithUARTFIFOEntries", "chipyard v1.10")
 class WithUARTFIFOEntries(txEntries: Int, rxEntries: Int) extends Config((site, here, up) => {
   case PeripheryUARTKey => up(PeripheryUARTKey).map(_.copy(nTxEntries = txEntries, nRxEntries = rxEntries))
 })

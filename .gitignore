@@ -16,7 +16,8 @@ env.sh
 tags
 *~
 .bsp/
-.conda-env/*
+.conda-env/
+.conda-lock-env/
 .#*
 first-clone-setup-fast-log
 .bloop/
@@ -27,3 +28,4 @@ project/project/
 .ivy2
 .sbt
 .classpath_cache/
+tests/build/
