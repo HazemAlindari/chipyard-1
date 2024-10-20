@@ -172,7 +172,6 @@ lazy val fpga = (project in file("generators/fpga"))
   .dependsOn(rocketchip)
   .settings(libraryDependencies ++= rocketLibDeps.value)
   .settings(commonSettings)
-  .settings(Compile / unmanagedSourceDirectories += file("tools/stage/src/main/scala"))
 
 lazy val compressacc = (project in file("generators/compress-acc"))
   .dependsOn(rocketchip)
