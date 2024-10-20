@@ -157,4 +157,3 @@
 [submodule "generators/fpga"]
 	path = generators/fpga
 	url = git@github.com:HazemAlindari/fpga.git
-	branch = sha3
