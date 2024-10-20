@@ -167,6 +167,7 @@ lazy val chipyard = (project in file("generators/chipyard"))
     )
   )
   .settings(commonSettings)
+  .settings(Compile / unmanagedSourceDirectories += file("tools/stage/src/main/scala"))
 
 lazy val fpga = (project in file("generators/fpga"))
   .dependsOn(rocketchip)
