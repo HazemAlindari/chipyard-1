@@ -3,3 +3,4 @@
 !Makefile
 !verilator.mk
 !dramsim2_ini
+!doBuildSHA3.sh
