@@ -87,10 +87,15 @@ add_executable(gcd gcd.c)
 add_executable(hello hello.c)
 add_executable(mt-hello mt-hello.c)
 add_executable(symmetric symmetric.c)
-add_executable(testSHA3High32Bit testSHA3High32Bit.c)
-add_executable(testSHA3High64Bit testSHA3High64Bit.c)
-add_executable(testSHA3Low32Bit testSHA3Low32Bit.c)
-add_executable(testSHA3Low64Bit testSHA3Low64Bit.c)
+add_executable(testSHA3-512High32Bit testSHA3-512High32Bit.c)
+add_executable(testSHA3-512High64Bit testSHA3-512High64Bit.c)
+add_executable(testSHA3-512Low32Bit testSHA3-512Low32Bit.c)
+add_executable(testSHA3-512Low64Bit testSHA3-512Low64Bit.c)
+add_executable(testSHA3-256High32Bit testSHA3-256High32Bit.c)
+add_executable(testSHA3-256High64Bit testSHA3-256High64Bit.c)
+#add_executable(testSHA3-256Low32Bit testSHA3-256Low32Bit.c)
+#add_executable(testSHA3-256Low64Bit testSHA3-256Low64Bit.c)
+
 
 #################################
 # Disassembly
@@ -129,10 +134,14 @@ add_dump_target(gcd)
 add_dump_target(hello)
 add_dump_target(mt-hello)
 add_dump_target(symmetric)
-add_dump_target(testSHA3High32Bit)
-add_dump_target(testSHA3High64Bit)
-add_dump_target(testSHA3Low32Bit)
-add_dump_target(testSHA3Low64Bit)
+add_dump_target(testSHA3-512High32Bit)
+add_dump_target(testSHA3-512High64Bit)
+add_dump_target(testSHA3-512Low32Bit)
+add_dump_target(testSHA3-512Low64Bit)
+add_dump_target(testSHA3-256High32Bit)
+add_dump_target(testSHA3-256High64Bit)
+#add_dump_target(testSHA3-256Low32Bit)
+#add_dump_target(testSHA3-256Low64Bit)
 
 
 # Add custom command to generate spiflash.img from spiflash.py
