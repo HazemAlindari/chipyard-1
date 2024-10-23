@@ -39,6 +39,10 @@
         {
             "filePath": "generators/fpga/config/RocketFPGAConfigs.scala",
             "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/doBuildSHA3.sh",
+            "group": "Default"
         }
     ],
     "files.associations": {
