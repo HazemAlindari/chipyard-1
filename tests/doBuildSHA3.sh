@@ -17,4 +17,4 @@ cmake --build $BUILD_DIR --target testSHA3-512Low64Bit
 cmake --build $BUILD_DIR --target testSHA3-256High32Bit
 cmake --build $BUILD_DIR --target testSHA3-256High64Bit
 #cmake --build $BUILD_DIR --target testSHA3-256Low32Bit
-#cmake --build $BUILD_DIR --target testSHA3-256Low64Bit
+cmake --build $BUILD_DIR --target testSHA3-256Low64Bit
