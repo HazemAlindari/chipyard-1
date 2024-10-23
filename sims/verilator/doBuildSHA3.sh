@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Set the environment variables and build the SHA3 binary
+source ../../env.sh
+cd ../../tests
+./doBuildSHA3.sh
+cd ../sims/verilator
+
 # Display the menu and read user's choice
 echo "eFPGA Simulation"
 echo "================"
