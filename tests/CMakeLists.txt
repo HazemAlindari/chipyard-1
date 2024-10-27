@@ -95,6 +95,7 @@ add_executable(testSHA3-256High32Bit testSHA3-256High32Bit.c)
 add_executable(testSHA3-256High64Bit testSHA3-256High64Bit.c)
 add_executable(testSHA3-256Low32Bit testSHA3-256Low32Bit.c)
 add_executable(testSHA3-256Low64Bit testSHA3-256Low64Bit.c)
+add_executable(testSHA3-CPU testSHA3-CPU.c)
 
 
 #################################
@@ -142,6 +143,7 @@ add_dump_target(testSHA3-256High32Bit)
 add_dump_target(testSHA3-256High64Bit)
 add_dump_target(testSHA3-256Low32Bit)
 add_dump_target(testSHA3-256Low64Bit)
+add_dump_target(testSHA3-CPU)
 
 
 # Add custom command to generate spiflash.img from spiflash.py
