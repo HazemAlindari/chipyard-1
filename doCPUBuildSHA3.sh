@@ -1,0 +1,1 @@
+generators/fpga/doCPUBuildSHA3.sh
