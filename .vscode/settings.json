@@ -47,6 +47,10 @@
         {
             "filePath": "generators/fpga/doCPUBuildSHA3.sh",
             "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/doAllBuildSHA3.sh",
+            "group": "Default"
         }
     ],
     "files.associations": {
