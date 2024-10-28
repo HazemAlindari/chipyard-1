@@ -51,6 +51,10 @@
         {
             "filePath": "generators/fpga/doAllBuildSHA3.sh",
             "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/doVTR.sh",
+            "group": "Default"
         }
     ],
     "files.associations": {
