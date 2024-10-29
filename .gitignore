@@ -29,3 +29,7 @@ project/project/
 .sbt
 .classpath_cache/
 tests/build/
+doVTR.err
+doVTR.out
+doAllBuildSHA3.err
+doAllBuildSHA3.out
