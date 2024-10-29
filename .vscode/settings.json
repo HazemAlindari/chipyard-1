@@ -55,6 +55,10 @@
         {
             "filePath": "generators/fpga/doVTR.sh",
             "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/VTR",
+            "group": "Default"
         }
     ],
     "files.associations": {
