@@ -1,1 +1,0 @@
-generators/fpga/doBuildSHA3.sh

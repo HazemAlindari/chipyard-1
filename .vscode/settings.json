@@ -41,18 +41,6 @@
             "group": "Default"
         },
         {
-            "filePath": "generators/fpga/doBuildSHA3.sh",
-            "group": "Default"
-        },
-        {
-            "filePath": "generators/fpga/doCPUBuildSHA3.sh",
-            "group": "Default"
-        },
-        {
-            "filePath": "generators/fpga/doAllBuildSHA3.sh",
-            "group": "Default"
-        },
-        {
             "filePath": "generators/fpga/doVTR.sh",
             "group": "Default"
         },
@@ -66,6 +54,14 @@
         },
         {
             "filePath": "sims/verilator/results",
+            "group": "Default"
+        },
+        {
+            "filePath": "doCPU.sh",
+            "group": "Default"
+        },
+        {
+            "filePath": "doFPGA.sh",
             "group": "Default"
         }
     ],
