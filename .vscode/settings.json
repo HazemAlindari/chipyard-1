@@ -57,11 +57,15 @@
             "group": "Default"
         },
         {
-            "filePath": "doCPU.sh",
+            "filePath": "generators/fpga/doCPU.sh",
             "group": "Default"
         },
         {
-            "filePath": "doFPGA.sh",
+            "filePath": "generators/fpga/doFPGA.sh",
+            "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/doAll.sh",
             "group": "Default"
         }
     ],
