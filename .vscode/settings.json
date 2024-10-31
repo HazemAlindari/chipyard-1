@@ -59,6 +59,14 @@
         {
             "filePath": "generators/fpga/VTR",
             "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/doParse.sh",
+            "group": "Default"
+        },
+        {
+            "filePath": "sims/verilator/results",
+            "group": "Default"
         }
     ],
     "files.associations": {

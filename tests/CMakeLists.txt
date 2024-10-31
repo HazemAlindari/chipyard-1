@@ -13,7 +13,6 @@ cmake_minimum_required(VERSION 3.10)
 
 project(chipyard-tests LANGUAGES C CXX)
 
-
 #################################
 # RISCV Toolchain
 #################################
@@ -32,10 +31,8 @@ set(CMAKE_OBJCOPY       "${TOOLCHAIN_PREFIX}objcopy")
 set(CMAKE_OBJDUMP       "${TOOLCHAIN_PREFIX}objdump")
 set(CMAKE_SIZE          "${TOOLCHAIN_PREFIX}size")
 
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY     "${CMAKE_BINARY_DIR}/..")
 set(CMAKE_EXECUTABLE_SUFFIX            ".riscv")
-
 
 #################################
 # Flags
@@ -63,7 +60,6 @@ add_compile_options(${SPEC_FLAGS})
 add_link_options(-static)
 add_link_options(${SPEC_FLAGS})
 add_link_options(-T ${LINKER_SCRIPT})
-
 
 #################################
 # Build
@@ -95,8 +91,8 @@ add_executable(testSHA3-256High32Bit testSHA3-256High32Bit.c)
 add_executable(testSHA3-256High64Bit testSHA3-256High64Bit.c)
 add_executable(testSHA3-256Avrg32Bit testSHA3-256Avrg32Bit.c)
 add_executable(testSHA3-256Avrg64Bit testSHA3-256Avrg64Bit.c)
-add_executable(testSHA3-CPU testSHA3-CPU.c)
-
+add_executable(testSHA3-512 testSHA3-512.c)
+add_executable(testSHA3-256 testSHA3-256.c)
 
 #################################
 # Disassembly
@@ -143,8 +139,8 @@ add_dump_target(testSHA3-256High32Bit)
 add_dump_target(testSHA3-256High64Bit)
 add_dump_target(testSHA3-256Avrg32Bit)
 add_dump_target(testSHA3-256Avrg64Bit)
-add_dump_target(testSHA3-CPU)
-
+add_dump_target(testSHA3-512)
+add_dump_target(testSHA3-256)
 
 # Add custom command to generate spiflash.img from spiflash.py
 add_custom_command(
