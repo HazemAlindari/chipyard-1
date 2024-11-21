@@ -1,4 +1,4 @@
-#define INPUT_SIZE 1
+#define INPUT_SIZE 10000
 #include <stdint.h>
 
 uint8_t input[INPUT_SIZE];
