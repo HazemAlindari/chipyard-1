@@ -67,6 +67,10 @@
         {
             "filePath": "generators/fpga/doAll.sh",
             "group": "Default"
+        },
+        {
+            "filePath": "generators/fpga/doParse.py",
+            "group": "Default"
         }
     ],
     "files.associations": {
